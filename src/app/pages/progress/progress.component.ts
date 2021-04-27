@@ -8,9 +8,15 @@ import { Component } from '@angular/core';
 export class ProgressComponent {
 
 
-  
+  progreso1: number = 25;
+  progreso2: number = 35;
 
-  constructor() { }
+  get getProgeso1(): string {
+    return `${this.progreso1}%`;
+  }
 
+  get getProgeso2(): string {
+    return `${this.progreso2}%`;
+  }
 
 }
