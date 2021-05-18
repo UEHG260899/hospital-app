@@ -8,18 +8,66 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent{
 
+  public formSubmitted: boolean = false;
+
   public registerForm: FormGroup = this._fb.group({
     nombre : ['', [Validators.required, Validators.minLength(3)]],
-    email : ['', Validators.required],
+    email : ['', [Validators.required, Validators.email]],
     password : ['', Validators.required],
     password2 : ['', Validators.required],
     terminos : [false, Validators.required]
+  }, {
+    validators: this.passwordsIguales('password', 'password2')
   });
 
   constructor(private _fb: FormBuilder) { }
 
+  campoNoValido(campo: string): boolean {
+    if(this.registerForm.get(campo)?.invalid && this.formSubmitted){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  passwordNoIguales(){
+    const pass1 = this.registerForm.get('password')?.value;
+    const pass2 = this.registerForm.get('password2')?.value;
+
+    if((pass1 !== pass2) && this.formSubmitted){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  aceptarTerminos() {
+    return !this.registerForm.get('terminos')?.value && this.formSubmitted;
+  }
+
   crearUsuario(){
+    this.formSubmitted = true;
     console.log(this.registerForm.value);
+
+    if(this.registerForm.valid){
+      console.log('posteando formulario');
+    }else{
+      console.log('Formulario no es correcto');
+    }
+  }
+
+  passwordsIguales(pass1: string, pass2: string){
+    return (formGroup: FormGroup) => {
+
+      const pass1Control = formGroup.get(pass1);
+      const pass2Control = formGroup.get(pass2);
+
+      if(pass1Control!.value === pass2Control!.value){
+        pass2Control?.setErrors(null);
+      }else{
+        pass2Control?.setErrors({noIguales : true});
+      }
+    }
   }
 
 }
