@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  constructor(private _router : Router) { }
 
-  ngOnInit(): void {
-  }
+  public loginForm: FormGroup = this._fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
+  });
 
-  login(){
+  constructor(private _router: Router,
+    private _fb: FormBuilder) { }
+
+  login() {
     this._router.navigateByUrl("dashboard");
   }
 
