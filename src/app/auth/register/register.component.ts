@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 
 import { UsuarioService } from '../../services/usuario.service';
+
 
 
 @Component({
@@ -26,7 +28,8 @@ export class RegisterComponent{
   });
 
   constructor(private _fb: FormBuilder,
-              private _usuarioService: UsuarioService) { }
+              private _usuarioService: UsuarioService,
+              private _router: Router) { }
 
   campoNoValido(campo: string): boolean {
     if(this.registerForm.get(campo)?.invalid && this.formSubmitted){
@@ -53,7 +56,6 @@ export class RegisterComponent{
 
   crearUsuario(){
     this.formSubmitted = true;
-    console.log(this.registerForm.value);
 
     if(this.registerForm.invalid){
       return;
@@ -61,8 +63,7 @@ export class RegisterComponent{
 
     this._usuarioService.crearUsuario(this.registerForm.value)
         .subscribe(resp => {
-          console.log('usuario creado');
-          console.log(resp);
+          this._router.navigateByUrl('/');
         }, (err) => {
           Swal.fire('Error', err.error.msg, 'error');
         });

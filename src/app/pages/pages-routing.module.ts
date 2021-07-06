@@ -8,6 +8,7 @@ import { PagesComponent } from './pages.component';
 import { ProgressComponent } from './progress/progress.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
+import { AuthGuard } from '../guards/auth.guard';
 
 
 
@@ -15,6 +16,7 @@ const routes : Routes = [
   { 
     path : 'dashboard', 
     component : PagesComponent,
+    canActivate: [AuthGuard],
     children : [
       //data permite enviar información en las rutas
       {path : '', component : DashboardComponent, data : {titulo : 'Dashboard'}},

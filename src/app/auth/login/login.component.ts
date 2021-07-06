@@ -41,6 +41,8 @@ export class LoginComponent implements OnInit {
         } else {
           localStorage.removeItem('email');
         }
+
+        this._router.navigateByUrl('/');
       }, err => {
         Swal.fire('Error', err.error.msg, 'error')
       });
@@ -74,7 +76,10 @@ export class LoginComponent implements OnInit {
     this.auth2.attachClickHandler(element, {},
         (googleUser: any) => {
           const id_token = googleUser.getAuthResponse().id_token;
-          this._usuarioService.loginGoogle(id_token).subscribe();
+          this._usuarioService.loginGoogle(id_token)
+              .subscribe(resp => {
+                this._router.navigateByUrl('/');
+              });
         }, function(error: any) {
           alert(JSON.stringify(error, undefined, 2));
         });
