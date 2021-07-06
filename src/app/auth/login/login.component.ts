@@ -62,30 +62,27 @@ export class LoginComponent implements OnInit {
     this.startApp();
   }
 
-  startApp() {
-    gapi.load('auth2', () => {
-      // Retrieve the singleton for the GoogleAuth library and set up the client.
-      this.auth2 = gapi.auth2.init({
-        client_id: '329672189352-3kii5mg1pv7h1fjhbtgjul03reo1lmhd.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-      });
-      this.attachSignin(document.getElementById('my-signin2'));
-    });
+  async startApp() {
+
+    await this._usuarioService.googleInit();
+    this.auth2 = this._usuarioService.auth2;
+    this.attachSignin(document.getElementById('my-signin2'));
+
   }
 
   attachSignin(element: any) {
     this.auth2.attachClickHandler(element, {},
-        (googleUser: any) => {
-          const id_token = googleUser.getAuthResponse().id_token;
-          this._usuarioService.loginGoogle(id_token)
-              .subscribe(resp => {
-                this.ngZone.run(() => {
-                  this._router.navigateByUrl('/');
-                })
-              });
-        }, function(error: any) {
-          alert(JSON.stringify(error, undefined, 2));
-        });
+      (googleUser: any) => {
+        const id_token = googleUser.getAuthResponse().id_token;
+        this._usuarioService.loginGoogle(id_token)
+          .subscribe(resp => {
+            this.ngZone.run(() => {
+              this._router.navigateByUrl('/');
+            })
+          });
+      }, function (error: any) {
+        alert(JSON.stringify(error, undefined, 2));
+      });
   }
 
 
