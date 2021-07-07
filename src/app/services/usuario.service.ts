@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
+import { Usuario } from '../models/usuario.model';
 
 
 declare const gapi: any;
@@ -19,6 +20,7 @@ export class UsuarioService {
 
   private _baseUrl: string = environment.baseURL;
   public auth2: any;
+  public usuario!: Usuario;
 
 
   constructor(private _http: HttpClient,
@@ -65,6 +67,8 @@ export class UsuarioService {
       }
     }).pipe(
       tap((resp: any) => {
+        const { nombre, email, google, role, uid, img } = resp.usuario;
+        this.usuario = new Usuario(nombre, email, '', google, img, uid, role);
         localStorage.setItem('token', resp.token);
       }),
       map(resp => true),
