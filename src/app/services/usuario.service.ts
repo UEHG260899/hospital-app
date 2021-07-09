@@ -6,9 +6,11 @@ import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
 
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { Usuario } from '../models/usuario.model';
+
 
 
 declare const gapi: any;
@@ -36,6 +38,14 @@ export class UsuarioService {
 
   get uid(): string{
     return this.usuario.uid || '';
+  }
+
+  get headers(): Object{
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
   }
 
   googleInit() {
@@ -121,5 +131,10 @@ export class UsuarioService {
           localStorage.setItem('token', resp.token);
         })
       );
+  }
+
+  cargarUsuarios( desde : number = 0 ){
+    const url = `${this._baseUrl}/usuarios?desde=${desde}`;
+    return this._http.get<CargarUsuario>( url, this.headers );
   }
 }
