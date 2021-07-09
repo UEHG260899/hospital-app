@@ -32,15 +32,15 @@ export class UsuarioService {
   }
 
 
-  get token(): string{
+  get token(): string {
     return localStorage.getItem('token') || '';
   }
 
-  get uid(): string{
+  get uid(): string {
     return this.usuario.uid || '';
   }
 
-  get headers(): Object{
+  get headers(): Object {
     return {
       headers: {
         'x-token': this.token
@@ -103,14 +103,14 @@ export class UsuarioService {
   }
 
   actualizarPerfil(data: { email: string, nombre: string, role: string }) {
-    
+
     data = {
       ...data,
       role: this.usuario.role!
     }
     return this._http.put(`${this._baseUrl}/usuarios/${this.uid}`, data, {
       headers: {
-        'x-token' : this.token
+        'x-token': this.token
       }
     });
   }
@@ -133,8 +133,18 @@ export class UsuarioService {
       );
   }
 
-  cargarUsuarios( desde : number = 0 ){
+  cargarUsuarios(desde: number = 0) {
     const url = `${this._baseUrl}/usuarios?desde=${desde}`;
-    return this._http.get<CargarUsuario>( url, this.headers );
+    return this._http.get<CargarUsuario>(url, this.headers)
+      .pipe(
+        map(resp => {
+          const usuarios = resp.usuarios.map(usuario => new Usuario(usuario.nombre, usuario.email
+            , '', usuario.google, usuario.img, usuario.uid, usuario.role));
+          return {
+            total: resp.total,
+            usuarios
+          }
+        })
+      )
   }
 }
