@@ -152,4 +152,8 @@ export class UsuarioService {
     const url = `${this._baseUrl}/usuarios/${uid}`;
     return this._http.delete(url, this.headers);
   }
+
+  guardarUsuario(usuario: Usuario) {
+    return this._http.put(`${this._baseUrl}/usuarios/${usuario.uid}`, usuario, this.headers);
+  }
 }
