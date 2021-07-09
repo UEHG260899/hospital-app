@@ -3,6 +3,7 @@ import { Usuario } from 'src/app/models/usuario.model';
 
 
 import { UsuarioService } from '../../../services/usuario.service';
+import { BusquedasService } from '../../../services/busquedas.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -20,7 +21,8 @@ export class UsuariosComponent implements OnInit {
   public cargando: boolean = true;
 
 
-  constructor(private _usuarioService: UsuarioService) { }
+  constructor(private _usuarioService: UsuarioService,
+              private _busquedasService: BusquedasService) { }
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -48,6 +50,13 @@ export class UsuariosComponent implements OnInit {
     }
 
     this.cargarUsuarios();
+  }
+
+  busqueda(termino: string){
+    this._busquedasService.buscar('usuarios', termino)
+        .subscribe( resp => {
+          this.usuarios = resp;
+        })
   }
 
 }
