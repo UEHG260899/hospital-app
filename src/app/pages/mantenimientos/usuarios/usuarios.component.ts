@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario.model';
-
+import Swal from 'sweetalert2';
 
 import { UsuarioService } from '../../../services/usuario.service';
 import { BusquedasService } from '../../../services/busquedas.service';
+
 
 @Component({
   selector: 'app-usuarios',
@@ -23,7 +24,7 @@ export class UsuariosComponent implements OnInit {
 
 
   constructor(private _usuarioService: UsuarioService,
-              private _busquedasService: BusquedasService) { }
+    private _busquedasService: BusquedasService) { }
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -54,16 +55,37 @@ export class UsuariosComponent implements OnInit {
     this.cargarUsuarios();
   }
 
-  busqueda(termino: string){
-    
-    if(termino.length === 0){
+  busqueda(termino: string) {
+
+    if (termino.length === 0) {
       return this.usuarios = this.usuariosTemp;
     }
     this._busquedasService.buscar('usuarios', termino)
-        .subscribe( resp => {
-          this.usuarios = resp;
-        })
+      .subscribe(resp => {
+        this.usuarios = resp;
+      })
     return;
   }
+
+  eliminarUsuario(usuario: Usuario) {
+    Swal.fire({
+      title: 'Borrar usuario?',
+      text: `Esta a punto de borrar a ${usuario.nombre}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Si, borrarlo'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._usuarioService.eliminarUsuario(usuario.uid!)
+          .subscribe(resp => {
+            Swal.fire('Usuario borrado',
+              `${usuario.nombre} ha sido borrado`,
+              'success');
+
+            this.cargarUsuarios();
+      });
+    }
+    })
+}
 
 }
