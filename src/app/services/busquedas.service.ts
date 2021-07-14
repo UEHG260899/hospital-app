@@ -35,9 +35,6 @@ export class BusquedasService {
     );
   }
 
-  private generarHospitales( resultados: any[] ): Hospital[]{
-    return resultados;
-  }
 
   buscar( tipo: 'usuarios' | 'medicos' | 'hospitales', termino: string = ''){
     const url = `${this.base_url}/todo/coleccion/${tipo}/${termino}`;
@@ -48,7 +45,7 @@ export class BusquedasService {
                     case 'usuarios': 
                       return this.generarUsuarios(resp.datos);
                     case 'hospitales':
-                      return this.generarHospitales(resp.datos);
+                      return resp.datos;
                     default: 
                       return [];
                   }
