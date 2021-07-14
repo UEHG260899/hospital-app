@@ -3,7 +3,8 @@
         <div class="card">
             <div class="card-body">
                 <input type="text" class="form-control"
-                    placeholder="Buscar Hospital">
+                    placeholder="Buscar Hospital"  #txtBuscar
+                    (keyup)="busqueda(txtBuscar.value)">
             </div>
         </div>
     </div>

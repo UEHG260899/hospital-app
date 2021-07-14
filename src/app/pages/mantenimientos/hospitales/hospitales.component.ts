@@ -7,6 +7,7 @@ import { HospitalService } from '../../../services/hospital.service';
 import { Hospital } from '../../../models/hospital.model';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
 import { delay } from 'rxjs/operators';
+import { BusquedasService } from '../../../services/busquedas.service';
 
 
 
@@ -19,11 +20,13 @@ import { delay } from 'rxjs/operators';
 export class HospitalesComponent implements OnInit {
 
   public hospitales: Hospital[] = [];
+  public hospitalesTemp: Hospital[] = [];
   public cargando: boolean = true;
   private imgSubs!: Subscription;
 
   constructor(private _hospitalService: HospitalService,
-              private _modalService: ModalImagenService) { }
+              private _modalService: ModalImagenService,
+              private _busquedaService: BusquedasService) { }
 
   ngOnInit(): void {
     this.cargarHospitales();
@@ -40,6 +43,7 @@ export class HospitalesComponent implements OnInit {
       .subscribe(hospitales => {
         this.cargando = false;
         this.hospitales = hospitales;
+        this.hospitalesTemp = hospitales;
       });
   }
 
@@ -59,7 +63,7 @@ export class HospitalesComponent implements OnInit {
   }
 
   async abrirSweetAlert(){
-    const { value } = await Swal.fire<string>({
+    const { value = ''} = await Swal.fire<string>({
       title: 'Agregar Hospital',
       text: 'Ingrese el nombre del hospital',
       input: 'text',
@@ -78,6 +82,20 @@ export class HospitalesComponent implements OnInit {
 
   abrirModal(hospital : Hospital){
     this._modalService.abrirModal('hospitales', hospital.id, hospital.img);
+  }
+
+  busqueda(termino: string){
+    
+    if(termino.length === 0){
+      return this.hospitales = this.hospitalesTemp;
+    }
+
+    this._busquedaService.buscar('hospitales', termino)
+        .subscribe((resp) => {
+          this.hospitales = resp;
+        });
+
+    return;
   }
 
 }
