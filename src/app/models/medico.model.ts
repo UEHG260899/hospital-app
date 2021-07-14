@@ -15,7 +15,7 @@ export class Medico {
 
     constructor(
         public nombre: string,
-        public _id: string,
+        public id: string,
         public usuario?: MedicoUser,
         public hospital?: MedicoUser,
         public img?: string
