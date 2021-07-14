@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 
+import { BusquedasService } from '../../../services/busquedas.service';
 import { Medico } from 'src/app/models/medico.model';
 import { MedicoService } from '../../../services/medico.service';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
+
 
 @Component({
   selector: 'app-medicos',
@@ -15,9 +17,11 @@ export class MedicosComponent implements OnInit {
 
   public cargando: boolean = true;
   public medicos: Medico[] = [];
+  public medicosTemp: Medico[] = [];
 
   constructor(private _medicosService: MedicoService,
-              private _modalService: ModalImagenService) { }
+              private _modalService: ModalImagenService,
+              private _busquedaService: BusquedasService) { }
 
   ngOnInit(): void {
     this.cargarMedicos();
@@ -30,6 +34,7 @@ export class MedicosComponent implements OnInit {
         .subscribe((resp) => {
           this.cargando = false;
           this.medicos = resp;
+          this.medicosTemp = resp;
         });
   }
 
@@ -43,5 +48,19 @@ export class MedicosComponent implements OnInit {
 
   abrirModal(medico : Medico){
     this._modalService.abrirModal('medicos', medico.id, medico.img);
+  }
+
+  busqueda(termino: string){
+    
+    if(termino.length === 0){
+      return this.medicos = this.medicosTemp;
+    }
+
+    this._busquedaService.buscar('medicos', termino)
+        .subscribe((resp) => {
+          this.medicos = resp;
+        });
+
+    return;
   }
 }

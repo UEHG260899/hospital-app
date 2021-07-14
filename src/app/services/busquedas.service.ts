@@ -46,6 +46,8 @@ export class BusquedasService {
                       return this.generarUsuarios(resp.datos);
                     case 'hospitales':
                       return resp.datos;
+                    case 'medicos':
+                      return resp.datos;
                     default: 
                       return [];
                   }
