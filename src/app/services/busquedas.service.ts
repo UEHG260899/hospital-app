@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 
 import { Usuario } from 'src/app/models/usuario.model';
+import { Hospital } from '../models/hospital.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,8 @@ export class BusquedasService {
     );
   }
 
-  buscar( tipo: 'usuarios' | 'medicos' | 'hopsitales', termino: string = ''){
+
+  buscar( tipo: 'usuarios' | 'medicos' | 'hospitales', termino: string = ''){
     const url = `${this.base_url}/todo/coleccion/${tipo}/${termino}`;
     return this._http.get<any[]>(url, this.headers)
               .pipe(
@@ -42,6 +44,8 @@ export class BusquedasService {
                   switch(tipo){
                     case 'usuarios': 
                       return this.generarUsuarios(resp.datos);
+                    case 'hospitales':
+                      return resp.datos;
                     default: 
                       return [];
                   }
