@@ -54,4 +54,9 @@ export class BusquedasService {
                 } )
               );
   }
+
+  busquedaGlobal(termino : string){
+    const url = `${this.base_url}/todo/${termino}`;
+    return this._http.get(url, this.headers);
+  }
 }

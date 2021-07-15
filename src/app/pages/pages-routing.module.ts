@@ -14,6 +14,7 @@ import { ProgressComponent } from './progress/progress.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
+import { BusquedaComponent } from './busqueda/busqueda.component';
 
 
 
@@ -36,7 +37,8 @@ const routes : Routes = [
       {path : 'usuarios', component: UsuariosComponent, data : {titulo : 'Usuarios de aplicacion'}},
       {path : 'hospitales', component: HospitalesComponent, data : {titulo : 'Hospitales de aplicacion'}},
       {path : 'medicos', component: MedicosComponent, data : {titulo: 'Medicos de la aplicacion'}},
-      {path : 'medico/:id', component: MedicoComponent, data : {titulo : 'Medico a editar'}}
+      {path : 'medico/:id', component: MedicoComponent, data : {titulo : 'Medico a editar'}},
+      {path : 'buscar/:termino', component : BusquedaComponent, data : {titulo : 'Busquedas'}}
     ]
   }
 ];
