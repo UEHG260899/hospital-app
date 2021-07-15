@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 import { BusquedasService } from '../../../services/busquedas.service';
 import { Medico } from 'src/app/models/medico.model';
 import { MedicoService } from '../../../services/medico.service';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
+
 
 
 @Component({
@@ -18,6 +21,7 @@ export class MedicosComponent implements OnInit {
   public cargando: boolean = true;
   public medicos: Medico[] = [];
   public medicosTemp: Medico[] = [];
+  public imgSubs!: Subscription;
 
   constructor(private _medicosService: MedicoService,
               private _modalService: ModalImagenService,
@@ -25,6 +29,11 @@ export class MedicosComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarMedicos();
+    this.imgSubs = this._modalService.nuevaImagen
+        .pipe(
+          delay(100)
+        )  
+        .subscribe(img => this.cargarMedicos());
   }
 
 
