@@ -29,6 +29,13 @@ export class AuthGuard implements CanActivate, CanLoad {
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+      return this.usuarioService.validarToken()
+      .pipe(
+        tap( isAuth => {
+          if(!isAuth){
+            this.router.navigateByUrl('/auth/login');
+          }
+        } )
+      );
   }
 }
