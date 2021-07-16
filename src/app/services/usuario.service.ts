@@ -48,6 +48,10 @@ export class UsuarioService {
     }
   }
 
+  get role(): string {
+    return this.usuario.role!;
+  }
+
   googleInit() {
     return new Promise<void>(resolve => {
       gapi.load('auth2', () => {
@@ -62,9 +66,14 @@ export class UsuarioService {
 
   }
 
+  guardarLocalStorage(token: string, menu: any){
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
 
     this.auth2.signOut().then(() => {
@@ -86,7 +95,7 @@ export class UsuarioService {
       map((resp: any) => {
         const { nombre, email, google, role, uid, img = '' } = resp.usuario;
         this.usuario = new Usuario(nombre, email, '', google, img, uid, role);
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
         return true;
       }),
       catchError(err => of(false))
@@ -97,7 +106,7 @@ export class UsuarioService {
     return this._http.post(`${this._baseUrl}/usuarios`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token);
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
       );
   }
@@ -119,7 +128,7 @@ export class UsuarioService {
     return this._http.post(`${this._baseUrl}/login`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token);
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
       );
   }
@@ -128,7 +137,7 @@ export class UsuarioService {
     return this._http.post(`${this._baseUrl}/login/google`, { token })
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token);
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
       );
   }
